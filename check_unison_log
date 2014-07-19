@@ -1,0 +1,98 @@
+#!/usr/bin/perl 
+#===============================================================================
+#
+#         FILE:  check_unison_log
+#
+#        USAGE:  ./check_unison_log -f ~/unison.log
+#
+#  DESCRIPTION:  Check Unison last line logs
+#
+#      OPTIONS:  -f
+# REQUIREMENTS:  Perl
+#         BUGS:  ---
+#        NOTES:  ---
+#       AUTHOR:  Pierre Mavro (), pierre@mavro.fr
+#      COMPANY:  
+#      VERSION:  0.1
+#      CREATED:  13/05/2011 07:25:30
+#     REVISION:  ---
+#===============================================================================
+
+use strict;
+use warnings;
+use Getopt::Long;
+
+sub get_info
+{
+    my $file=shift;
+
+    if (-f $file)
+    {
+        my $cmd_res=`tail -1 $file`;
+        if ($cmd_res =~ /Synchronization complete/)
+        {
+            return 0;
+        }
+        else
+        {
+            return 2;
+        }
+    }
+    else
+    {
+        return 3;
+    }
+}
+
+sub send_to_nagios
+{
+    my $return=shift;
+    my $file=shift;
+
+    if ($return == 0)
+    {
+        print "Synchronization OK\n";
+        exit 0;
+    }
+    elsif ($return == 2)
+    {
+        print "Synchronisation failed : please check $file file for diagnosis\n";
+        exit 2;
+    }
+    elsif ($return == 3)
+    {
+        print "Synchronisation failed : can't open $file\n";
+        exit 3;
+    }
+    else
+    {
+        print "Unknow error\n";
+        exit 3;
+    }
+}
+
+sub help
+{
+    print "Usage : check_unison -f ~/unison.log\n";
+    exit 1;
+}
+
+# Command Args
+sub check_opts
+{
+    # Vars
+    my $file;
+    
+    # Set options
+    GetOptions( "help|h"    => \&help,
+                "f=s"       => \$file);
+
+    unless ($file)
+    {
+        help;
+    }
+    my $result=get_info($file);
+    send_to_nagios($result,$file);
+}
+
+&check_opts;

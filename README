@@ -1,0 +1,19 @@
+#!/usr/bin/perl 
+#===============================================================================
+#
+#         FILE:  check_unison_log
+#
+#        USAGE:  ./check_unison_log -f ~/unison.log
+#
+#  DESCRIPTION:  Check Unison last line logs
+#
+#      OPTIONS:  -f
+# REQUIREMENTS:  Perl
+#         BUGS:  ---
+#        NOTES:  ---
+#       AUTHOR:  Pierre Mavro (), pierre@mavro.fr
+#      COMPANY:  
+#      VERSION:  0.1
+#      CREATED:  13/05/2011 07:25:30
+#     REVISION:  ---
+#===============================================================================
